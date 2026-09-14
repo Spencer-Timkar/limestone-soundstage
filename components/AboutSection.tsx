@@ -22,14 +22,11 @@ export default function AboutSection() {
                     className="prose prose-invert mx-auto"
                 >
                     <p className="text-lg md:text-xl text-zinc-300 leading-relaxed">
-                        Limestone is an alternative-rock band that brings a unique blend
-                        of melodic and hard-hitting elements to the genre. Hailing from
-                        Lawrence, Kansas, they are known for emotionally charged songwriting,
-                        powerful instrumentals, and a sound that balances vulnerability with intensity.
-                        Formed in a basement one winter day in 2024, Limestone has generated an
-                        undeniable presence in their local music scene. With their upcoming
-                        self-titled EP, Limestone, the band is hungry to expand their reach
-                        and connect with listeners far beyond their Kansas roots.
+Limestone began in a Lawrence, Kansas basement in the winter of 2024. The five-piece makes alternative rock with a melodic pull and a heavy backbone, pairing emotionally direct songwriting with guitars and vocals that fill a room.
+
+Fronted by Lizzie Scharpf, with Spencer Timkar and Max Lajoie on guitars, Andrew Kotch on bass, and Blake Amren on drums, Limestone brings that sound to life through performances built on energy and connection. In an early live review, The Pitch praised the band’s “polish and shine of scene veterans,” describing a crowd lined up outside the door.
+
+Their 2026 self-titled EP and follow-up single “Grace” mark the first stretch of a band finding its voice, with Lawrence at the center of the story.
                     </p>
                 </motion.div>
             </div>
