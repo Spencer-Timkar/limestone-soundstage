@@ -26,7 +26,14 @@ export default async function Home() {
       {/* Spacer before Upcoming section */}
       <div className="h-32 md:h-48 bg-black" />
 
-      <MusicSection />
+      <MusicSection
+        title="Mother’s Daughter"
+        background="/images/grace_background.webp"
+        embedUrl="https://open.spotify.com/embed/album/0TN7dJi171h0S8gWcgTGoE?utm_source=generator&theme=0"
+        href="/mothers-daughter"
+        label="New Single Out Now"
+      />
+      {/* <MusicSection id="grace" /> */}
       <EPSection />
 
       {/* Unified Bottom Section with Star Background */}
