@@ -22,8 +22,10 @@ export default function MetaTracking() {
     const [consent, setConsent] = useState<string | null>(null);
     const [ready, setReady] = useState(false);
     const [settingsOpen, setSettingsOpen] = useState(false);
+    const [fromAd, setFromAd] = useState(false);
     const lastTrackedPath = useRef<string | null>(null);
     const enabled = Boolean(pixelId && /^\d+$/.test(pixelId));
+    const releasePage = pathname === "/mothers-daughter" || pathname === "/grace";
 
     useEffect(() => {
         try {
@@ -34,7 +36,29 @@ export default function MetaTracking() {
     }, []);
 
     useEffect(() => {
-        if (!enabled || consent !== "accepted" || !pixelId) return;
+        const params = new URLSearchParams(window.location.search);
+        const source = params.get("utm_source")?.toLowerCase();
+        const medium = params.get("utm_medium")?.toLowerCase();
+        const adVisit = params.has("fbclid") || (
+            ["meta", "facebook", "instagram", "fb", "ig"].includes(source || "") &&
+            ["paid_social", "paid", "cpc", "ppc"].includes(medium || "")
+        );
+        setFromAd(adVisit);
+        // Meta's SDK persists across client navigation. Unload it with a full
+        // navigation when leaving an eligible ad landing page.
+        if ((!releasePage || !adVisit) && window.fbq) {
+            window.fbq("consent", "revoke");
+            window.location.reload();
+        }
+    }, [pathname, releasePage]);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const currentAdVisit = params.has("fbclid") || (
+            ["meta", "facebook", "instagram", "fb", "ig"].includes(params.get("utm_source")?.toLowerCase() || "") &&
+            ["paid_social", "paid", "cpc", "ppc"].includes(params.get("utm_medium")?.toLowerCase() || "")
+        );
+        if (!enabled || !releasePage || !fromAd || !currentAdVisit || consent !== "accepted" || !pixelId) return;
         if (!window.fbq) {
             const fbq = function (...args: unknown[]) {
                 if (fbq.callMethod) fbq.callMethod(...args);
@@ -46,6 +70,7 @@ export default function MetaTracking() {
             fbq.version = "2.0";
             window.fbq = window._fbq = fbq;
             fbq("consent", "grant");
+            fbq("set", "autoConfig", false, pixelId);
             fbq("init", pixelId);
             const script = document.createElement("script");
             script.id = "limestone-meta-pixel";
@@ -73,14 +98,13 @@ export default function MetaTracking() {
             // Artist/social links aren't release-streaming conversions.
             if (url.pathname.includes("/artist/") || url.pathname.includes("/@")) return;
             const release = pathname === "/mothers-daughter" ? "Mother's Daughter"
-                : pathname === "/grace" ? "Grace"
-                : pathname === "/limestone" || anchor.closest("#ep") ? "Limestone EP" : null;
+                : pathname === "/grace" ? "Grace" : null;
             if (!release) return;
             window.fbq?.("trackCustom", "StreamingLinkClick", { release, platform, page: pathname });
         };
         document.addEventListener("click", handleClick);
         return () => document.removeEventListener("click", handleClick);
-    }, [consent, enabled, pathname]);
+    }, [consent, enabled, pathname, releasePage, fromAd]);
 
     function choose(value: "accepted" | "declined") {
         try { localStorage.setItem(consentKey, value); } catch { /* Still honor the choice for this visit. */ }
@@ -94,7 +118,7 @@ export default function MetaTracking() {
         setSettingsOpen(false);
     }
 
-    if (!enabled || !ready) return null;
+    if (!enabled || !ready || !releasePage || !fromAd) return null;
     return <>
         <button type="button" onClick={() => setSettingsOpen(true)} className="fixed bottom-3 left-3 z-50 rounded bg-black/90 px-3 py-2 text-xs text-white border border-white/30">Ad privacy settings</button>
         {(!consent || settingsOpen) && <section aria-label="Advertising privacy preferences" className="fixed bottom-14 left-3 right-3 z-50 mx-auto max-w-lg rounded-xl border border-white/30 bg-zinc-950 p-5 text-white shadow-xl">
