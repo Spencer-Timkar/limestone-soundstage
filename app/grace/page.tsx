@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -9,22 +9,6 @@ import { track } from "@vercel/analytics";
 
 export default function GraceHyperfollowPage() {
     const [copied, setCopied] = useState(false);
-    const iframeWrapperRef = useRef<HTMLDivElement>(null);
-
-    // Track iframe interactions (when user clicks play on embedded player)
-    useEffect(() => {
-        const handleBlur = () => {
-            if (document.activeElement?.tagName === "IFRAME") {
-                track("Player Interaction", {
-                    release: "Grace",
-                    type: "Spotify Embed",
-                    page: "/grace",
-                });
-            }
-        };
-        window.addEventListener("blur", handleBlur);
-        return () => window.removeEventListener("blur", handleBlur);
-    }, []);
 
     const handleShare = () => {
         track("Hyperfollow Share", { release: "Grace", page: "/grace" });
@@ -163,35 +147,14 @@ export default function GraceHyperfollowPage() {
                     </p>
                 </motion.div>
 
-                {/* Spotify Audio Preview Player */}
-                <motion.div
-                    ref={iframeWrapperRef}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="w-full mb-6 rounded-2xl overflow-hidden shadow-xl bg-black/60 backdrop-blur-xl border border-white/15 p-2"
-                >
-                    <iframe
-                        data-testid="embed-iframe"
-                        style={{ borderRadius: "12px" }}
-                        src="https://open.spotify.com/embed/track/4rZZaQnV5SHnxVLxn7KQS1?utm_source=generator&theme=0"
-                        width="100%"
-                        height="152"
-                        frameBorder="0"
-                        allowFullScreen
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                        loading="lazy"
-                        title="Grace Preview"
-                    />
-                </motion.div>
-
                 {/* Platform Links List */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
                     className="w-full space-y-3 mb-8"
                 >
+                    <p className="pb-1 text-center text-xs font-semibold uppercase tracking-[0.25em] text-zinc-400">Listen to the full song:</p>
                     {streamingPlatforms.map((platform) => (
                         <a
                             key={platform.name}
