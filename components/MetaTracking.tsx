@@ -2,9 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import Link from "next/link";
 
-const consentKey = "limestone-meta-consent-v1";
 const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 type Pixel = ((...args: unknown[]) => void) & {
     queue: unknown[][];
@@ -19,21 +17,10 @@ declare global {
 
 export default function MetaTracking() {
     const pathname = usePathname();
-    const [consent, setConsent] = useState<string | null>(null);
-    const [ready, setReady] = useState(false);
-    const [settingsOpen, setSettingsOpen] = useState(false);
     const [fromAd, setFromAd] = useState(false);
     const lastTrackedPath = useRef<string | null>(null);
     const enabled = Boolean(pixelId && /^\d+$/.test(pixelId));
     const releasePage = pathname === "/mothers-daughter" || pathname === "/grace";
-
-    useEffect(() => {
-        try {
-            const saved = localStorage.getItem(consentKey);
-            setConsent(saved === "accepted" || saved === "declined" ? saved : null);
-        } catch { /* Ask again if storage is unavailable. */ }
-        setReady(true);
-    }, []);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -58,7 +45,7 @@ export default function MetaTracking() {
             ["meta", "facebook", "instagram", "fb", "ig"].includes(params.get("utm_source")?.toLowerCase() || "") &&
             ["paid_social", "paid", "cpc", "ppc"].includes(params.get("utm_medium")?.toLowerCase() || "")
         );
-        if (!enabled || !releasePage || !fromAd || !currentAdVisit || consent !== "accepted" || !pixelId) return;
+        if (!enabled || !releasePage || !fromAd || !currentAdVisit || !pixelId) return;
         if (!window.fbq) {
             const fbq = function (...args: unknown[]) {
                 if (fbq.callMethod) fbq.callMethod(...args);
@@ -104,30 +91,7 @@ export default function MetaTracking() {
         };
         document.addEventListener("click", handleClick);
         return () => document.removeEventListener("click", handleClick);
-    }, [consent, enabled, pathname, releasePage, fromAd]);
+    }, [enabled, pathname, releasePage, fromAd]);
 
-    function choose(value: "accepted" | "declined") {
-        try { localStorage.setItem(consentKey, value); } catch { /* Still honor the choice for this visit. */ }
-        if (value === "declined" && consent === "accepted") {
-            window.fbq?.("consent", "revoke");
-            // Reload to remove the already-loaded advertising SDK entirely.
-            window.location.reload();
-            return;
-        }
-        setConsent(value);
-        setSettingsOpen(false);
-    }
-
-    if (!enabled || !ready || !releasePage || !fromAd) return null;
-    return <>
-        <button type="button" onClick={() => setSettingsOpen(true)} className="fixed bottom-3 left-3 z-50 rounded bg-black/90 px-3 py-2 text-xs text-white border border-white/30">Ad privacy settings</button>
-        {(!consent || settingsOpen) && <section aria-label="Advertising privacy preferences" className="fixed bottom-14 left-3 right-3 z-50 mx-auto max-w-lg rounded-xl border border-white/30 bg-zinc-950 p-5 text-white shadow-xl">
-            <p className="font-semibold mb-2">Optional advertising tracking</p>
-            <p className="text-sm text-zinc-300">With your permission, Meta receives page visits and streaming-link clicks to measure our Facebook and Instagram ads and support remarketing. Declining won’t affect the site. <Link href="/privacy" className="underline">Privacy details</Link></p>
-            <div className="mt-4 flex gap-3">
-                <button type="button" onClick={() => choose("declined")} className="rounded border border-white px-4 py-2">Decline</button>
-                <button type="button" onClick={() => choose("accepted")} className="rounded border border-white px-4 py-2">Accept</button>
-            </div>
-        </section>}
-    </>;
+    return null;
 }
