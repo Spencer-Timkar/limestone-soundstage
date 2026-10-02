@@ -64,6 +64,22 @@ export default function MothersDaughterHyperfollowPage() {
             url: "https://youtu.be/r8OeErusPYs",
             icon: <Youtube className="w-6 h-6 text-[#FF0000]" />,
         },
+        {
+            name: "TIDAL",
+            action: "Stream",
+            url: "https://listen.tidal.com/track/558823389",
+            icon: (
+                <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M6 3 9 6 6 9 3 6 6 3Zm6 0 3 3-3 3-3-3 3-3Zm6 0 3 3-3 3-3-3 3-3ZM9 6l3 3-3 3-3-3 3-3Zm6 0 3 3-3 3-3-3 3-3Zm-3 3 3 3-3 3-3-3 3-3Z" />
+                </svg>
+            ),
+        },
+        {
+            name: "Amazon Music",
+            action: "Stream",
+            url: "https://music.amazon.com/albums/B0HHYMHTZC?trackAsin=B0HHYNPVK6",
+            icon: <Music className="w-6 h-6 text-[#25D1DA]" />,
+        },
     ];
 
     return (

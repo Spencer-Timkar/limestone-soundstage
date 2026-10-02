@@ -14,6 +14,11 @@ dist
 dist-ssr
 *.local
 
+# Local subscriber exports (may contain personal information)
+/outputs/email-list-import/
+Email List*.csv
+Email List*.xlsx
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
