@@ -1,11 +1,15 @@
 import Link from "next/link";
 
-export const metadata = { title: "Advertising Privacy" };
+export const metadata = { title: "Privacy" };
 
 export default function PrivacyPage() {
     return <main className="min-h-screen bg-black text-white px-6 py-20">
         <div className="max-w-2xl mx-auto space-y-6">
-            <h1 className="text-3xl font-bold">Advertising privacy</h1>
+            <h1 className="text-3xl font-bold">Privacy</h1>
+            <h2 className="text-xl font-semibold">Email list</h2>
+            <p>When you join our email list, we send your email address to Brevo so we can store it and send Limestone news, music, show, and merchandise updates. We also record the page where you signed up and the referral or campaign source when available. We do not sell this information.</p>
+            <p>You can unsubscribe at any time using the link included in our emails. Brevo processes mailing-list information under its own privacy policy.</p>
+            <h2 className="text-xl font-semibold">Advertising measurement</h2>
             <p>Our Meta Pixel loads only on /mothers-daughter and /grace when a visit includes a Meta click identifier or Meta paid-ad campaign parameters. It sends page visits and streaming-link clicks, including the release and platform, to Meta to measure Facebook and Instagram ads and support remarketing audiences. Unmarked visits and other pages do not use our Meta Pixel.</p>
             <p>Meta’s technology can process browser and device information, IP addresses, cookies, and advertising click identifiers. A streaming-link click is not a confirmed stream or purchase. We do not include names, email addresses, or booking messages in our custom streaming event.</p>
             <p>You can limit advertising tracking through your browser’s privacy controls and your Meta ad preferences. These controls do not erase data previously received by Meta.</p>

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft, ExternalLink, Share2, Check, Instagram, Youtube, Music, Radio } from "lucide-react";
 import { track } from "@vercel/analytics";
+import EmailSignup from "@/components/EmailSignup";
 
 export default function GraceHyperfollowPage() {
     const [copied, setCopied] = useState(false);
@@ -225,6 +226,10 @@ export default function GraceHyperfollowPage() {
                     </a>
                 </div>
             </section>
+
+            <div className="relative z-10 w-full">
+                <EmailSignup page="grace" />
+            </div>
 
             {/* Footer */}
             <footer className="relative z-10 py-6 text-center text-xs text-zinc-500 uppercase tracking-widest border-t border-white/5">
