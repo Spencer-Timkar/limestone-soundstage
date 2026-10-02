@@ -35,11 +35,11 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: "Please enter a valid email address." }, { status: 400 });
     }
 
-    const apiKey = process.env.BREVO_API_KEY;
-    const listId = Number(process.env.BREVO_LIST_ID);
+    const apiKey = process.env.Brevo_API_Key ?? process.env.BREVO_API_KEY;
+    const listId = Number(process.env.Brevo_List_ID ?? process.env.BREVO_LIST_ID);
 
     if (!apiKey || !Number.isInteger(listId) || listId <= 0) {
-        console.error("Email signup is missing BREVO_API_KEY or BREVO_LIST_ID.");
+        console.error("Email signup is missing a valid Brevo API key or list ID.");
         return NextResponse.json(
             { message: "Email signup is temporarily unavailable. Please try again later." },
             { status: 503 },
