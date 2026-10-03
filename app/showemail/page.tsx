@@ -6,10 +6,19 @@ import { track } from "@vercel/analytics";
 type SubmissionState = "idle" | "submitting" | "success" | "error";
 
 export default function ShowEmailPage() {
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState<SubmissionState>("idle");
     const [message, setMessage] = useState("");
-    const emailInput = useRef<HTMLInputElement>(null);
+    const firstNameInput = useRef<HTMLInputElement>(null);
+
+    const resetFeedback = () => {
+        if (status !== "idle") {
+            setStatus("idle");
+            setMessage("");
+        }
+    };
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -24,6 +33,8 @@ export default function ShowEmailPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     email,
+                    firstName,
+                    lastName,
                     page: "showemail",
                     source: "Live Show",
                     website: formData.get("website"),
@@ -36,11 +47,13 @@ export default function ShowEmailPage() {
                 throw new Error(result.message || "We couldn't add that email. Please try again.");
             }
 
+            setFirstName("");
+            setLastName("");
             setEmail("");
             setStatus("success");
             setMessage("Added to the list!");
             track("Email List Signup", { page: "showemail", source: "Live Show" });
-            emailInput.current?.focus();
+            firstNameInput.current?.focus();
         } catch (error) {
             setStatus("error");
             setMessage(error instanceof Error ? error.message : "We couldn't add that email. Please try again.");
@@ -50,27 +63,60 @@ export default function ShowEmailPage() {
     return (
         <main className="flex min-h-screen items-center justify-center bg-black px-5 text-white">
             <form onSubmit={handleSubmit} className="w-full max-w-xl">
+                <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <label htmlFor="show-first-name" className="sr-only">First name</label>
+                    <input
+                        ref={firstNameInput}
+                        id="show-first-name"
+                        type="text"
+                        name="firstName"
+                        value={firstName}
+                        onChange={(event) => {
+                            setFirstName(event.target.value);
+                            resetFeedback();
+                        }}
+                        autoComplete="given-name"
+                        placeholder="First name"
+                        required
+                        autoFocus
+                        disabled={status === "submitting"}
+                        className="min-w-0 rounded-full border border-white/25 bg-zinc-950 px-6 py-4 text-lg text-white outline-none transition placeholder:text-zinc-600 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
+                    />
+
+                    <label htmlFor="show-last-name" className="sr-only">Last name</label>
+                    <input
+                        id="show-last-name"
+                        type="text"
+                        name="lastName"
+                        value={lastName}
+                        onChange={(event) => {
+                            setLastName(event.target.value);
+                            resetFeedback();
+                        }}
+                        autoComplete="family-name"
+                        placeholder="Last name"
+                        required
+                        disabled={status === "submitting"}
+                        className="min-w-0 rounded-full border border-white/25 bg-zinc-950 px-6 py-4 text-lg text-white outline-none transition placeholder:text-zinc-600 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
+                    />
+                </div>
+
                 <div className="flex flex-col gap-3 sm:flex-row">
                     <label htmlFor="show-email" className="sr-only">Email address</label>
                     <input
-                        ref={emailInput}
                         id="show-email"
                         type="email"
                         name="email"
                         value={email}
                         onChange={(event) => {
                             setEmail(event.target.value);
-                            if (status !== "idle") {
-                                setStatus("idle");
-                                setMessage("");
-                            }
+                            resetFeedback();
                         }}
                         autoComplete="email"
                         autoCapitalize="none"
                         inputMode="email"
                         placeholder="Email address"
                         required
-                        autoFocus
                         disabled={status === "submitting"}
                         className="min-w-0 flex-1 rounded-full border border-white/25 bg-zinc-950 px-6 py-4 text-lg text-white outline-none transition placeholder:text-zinc-600 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
                     />

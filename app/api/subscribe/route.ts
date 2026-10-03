@@ -5,6 +5,8 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type SubscribeRequest = {
     email?: unknown;
+    firstName?: unknown;
+    lastName?: unknown;
     page?: unknown;
     source?: unknown;
     website?: unknown;
@@ -37,6 +39,8 @@ export async function POST(request: Request) {
 
     const apiKey = process.env.BREVO_API_KEY;
     const listId = Number(process.env.BREVO_LIST_ID);
+    const firstName = cleanAttribute(body.firstName, "");
+    const lastName = cleanAttribute(body.lastName, "");
 
     if (!apiKey || !Number.isInteger(listId) || listId <= 0) {
         console.error("Email signup is missing a valid Brevo API key or list ID.");
@@ -45,6 +49,14 @@ export async function POST(request: Request) {
             { status: 503 },
         );
     }
+
+    const attributes: Record<string, string> = {
+        SIGNUP_PAGE: cleanAttribute(body.page, "unknown"),
+        SIGNUP_SOURCE: cleanAttribute(body.source, "direct"),
+    };
+
+    if (firstName) attributes.FIRSTNAME = firstName;
+    if (lastName) attributes.LASTNAME = lastName;
 
     let response: Response;
 
@@ -60,10 +72,7 @@ export async function POST(request: Request) {
                 email,
                 listIds: [listId],
                 updateEnabled: true,
-                attributes: {
-                    SIGNUP_PAGE: cleanAttribute(body.page, "unknown"),
-                    SIGNUP_SOURCE: cleanAttribute(body.source, "direct"),
-                },
+                attributes,
             }),
             cache: "no-store",
         });
