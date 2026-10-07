@@ -61,9 +61,13 @@ export default function ShowEmailPage() {
     };
 
     return (
-        <main className="flex min-h-screen items-center justify-center bg-black px-5 text-white">
-            <form onSubmit={handleSubmit} className="w-full max-w-xl">
-                <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <main className="flex min-h-screen items-center justify-center bg-black px-5 py-10 text-white">
+            <form onSubmit={handleSubmit} className="w-full max-w-2xl">
+                <h1 className="mb-8 text-center text-4xl font-black tracking-wide md:text-5xl">
+                    Join our email list!
+                </h1>
+
+                <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <label htmlFor="show-first-name" className="sr-only">First name</label>
                     <input
                         ref={firstNameInput}
@@ -80,7 +84,7 @@ export default function ShowEmailPage() {
                         required
                         autoFocus
                         disabled={status === "submitting"}
-                        className="min-w-0 rounded-full border border-white/25 bg-zinc-950 px-6 py-4 text-lg text-white outline-none transition placeholder:text-zinc-600 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
+                        className="min-w-0 rounded-full border border-white/25 bg-zinc-950 px-8 py-5 text-xl text-white outline-none transition placeholder:text-zinc-600 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
                     />
 
                     <label htmlFor="show-last-name" className="sr-only">Last name</label>
@@ -97,11 +101,11 @@ export default function ShowEmailPage() {
                         placeholder="Last name"
                         required
                         disabled={status === "submitting"}
-                        className="min-w-0 rounded-full border border-white/25 bg-zinc-950 px-6 py-4 text-lg text-white outline-none transition placeholder:text-zinc-600 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
+                        className="min-w-0 rounded-full border border-white/25 bg-zinc-950 px-8 py-5 text-xl text-white outline-none transition placeholder:text-zinc-600 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
                     />
                 </div>
 
-                <div className="flex flex-col gap-3 sm:flex-row">
+                <div className="flex flex-col gap-4 sm:flex-row">
                     <label htmlFor="show-email" className="sr-only">Email address</label>
                     <input
                         id="show-email"
@@ -118,12 +122,12 @@ export default function ShowEmailPage() {
                         placeholder="Email address"
                         required
                         disabled={status === "submitting"}
-                        className="min-w-0 flex-1 rounded-full border border-white/25 bg-zinc-950 px-6 py-4 text-lg text-white outline-none transition placeholder:text-zinc-600 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
+                        className="min-w-0 flex-1 rounded-full border border-white/25 bg-zinc-950 px-8 py-5 text-xl text-white outline-none transition placeholder:text-zinc-600 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
                     />
                     <button
                         type="submit"
                         disabled={status === "submitting"}
-                        className="rounded-full bg-white px-8 py-4 text-base font-black uppercase tracking-wider text-black transition hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-black disabled:cursor-wait disabled:opacity-60"
+                        className="rounded-full bg-white px-10 py-5 text-lg font-black uppercase tracking-wider text-black transition hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-black disabled:cursor-wait disabled:opacity-60"
                     >
                         {status === "submitting" ? "Adding…" : "Join"}
                     </button>
