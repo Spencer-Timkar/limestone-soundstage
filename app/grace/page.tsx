@@ -87,7 +87,7 @@ export default function GraceHyperfollowPage() {
             </div>
 
             {/* Top Navigation */}
-            <header className="relative z-20 container mx-auto px-6 py-6 flex justify-between items-center">
+            <header className="relative z-20 container mx-auto px-4 py-3 md:px-6 md:py-6 flex justify-between items-center">
                 <Link href="/" className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors group">
                     <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                     <span className="text-xs uppercase tracking-widest font-semibold">limestone.band</span>
@@ -95,7 +95,7 @@ export default function GraceHyperfollowPage() {
 
                 <button
                     onClick={handleShare}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all text-xs uppercase tracking-wider font-medium text-zinc-300 hover:text-white"
+                    className="flex min-h-11 md:min-h-0 items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all text-xs uppercase tracking-wider font-medium text-zinc-300 hover:text-white"
                     aria-label="Share release"
                 >
                     {copied ? (
@@ -113,18 +113,19 @@ export default function GraceHyperfollowPage() {
             </header>
 
             {/* Main Hyperfollow Container */}
-            <section className="relative z-10 container mx-auto px-4 py-8 flex flex-col items-center max-w-md">
+            <section className="relative z-10 container mx-auto px-4 py-3 md:py-8 flex flex-col items-center max-w-md">
                 {/* Artwork */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    initial={false}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="relative w-64 h-64 md:w-72 md:h-72 rounded-2xl overflow-hidden shadow-2xl border border-white/10 mb-6 group"
+                    className="relative w-32 h-32 md:w-72 md:h-72 rounded-xl md:rounded-2xl overflow-hidden shadow-2xl border border-white/10 mb-3 md:mb-6 group"
                 >
                     <Image
                         src="/images/grace_cover.webp"
                         alt="Grace by Limestone"
                         fill
+                        sizes="(min-width: 768px) 288px, 128px"
                         className="object-cover group-hover:scale-105 transition-transform duration-700"
                         priority
                     />
@@ -132,15 +133,15 @@ export default function GraceHyperfollowPage() {
 
                 {/* Track Info */}
                 <motion.div
-                    initial={{ opacity: 0, y: 15 }}
+                    initial={false}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.1 }}
-                    className="text-center mb-6"
+                    className="text-center mb-4 md:mb-6"
                 >
                     <span className="text-xs uppercase tracking-[0.25em] text-zinc-400 font-semibold mb-1 block">
                         New Single Out Now
                     </span>
-                    <h1 className="text-4xl md:text-5xl font-black uppercase tracking-wider text-white mb-2 drop-shadow-md">
+                    <h1 className="text-2xl md:text-5xl leading-tight md:leading-none font-black uppercase tracking-wider text-white mb-1 md:mb-2 drop-shadow-md">
                         Grace
                     </h1>
                     <p className="text-base md:text-lg font-medium text-zinc-300 tracking-wide">
@@ -150,10 +151,10 @@ export default function GraceHyperfollowPage() {
 
                 {/* Platform Links List */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={false}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
-                    className="w-full space-y-3 mb-8"
+                    className="w-full space-y-2 md:space-y-3 mb-6 md:mb-8"
                 >
                     <p className="pb-1 text-center text-xs font-semibold uppercase tracking-[0.25em] text-zinc-400">Listen to the full song:</p>
                     {streamingPlatforms.map((platform) => (
@@ -163,7 +164,7 @@ export default function GraceHyperfollowPage() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={() => handlePlatformClick(platform.name, platform.url)}
-                            className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 border border-white/10 hover:border-white/30 transition-all duration-300 group backdrop-blur-md shadow-lg"
+                            className="flex items-center justify-between p-3 md:p-4 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 border border-white/10 hover:border-white/30 transition-all duration-300 group backdrop-blur-md shadow-lg"
                         >
                             <div className="flex items-center gap-4">
                                 <div className="p-2 rounded-lg bg-black/50 group-hover:scale-110 transition-transform">
