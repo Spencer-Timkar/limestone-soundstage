@@ -1,52 +1,41 @@
 "use client";
-
-import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { track } from "@vercel/analytics";
+import { createReleaseTracker, dispatchReleaseEvent, isMetaAd, releaseFor, type ReleaseEvent } from "@/lib/releaseTracking";
 
 const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
-type Pixel = ((...args: unknown[]) => void) & {
-    queue: unknown[][];
-    callMethod?: (...args: unknown[]) => void;
-    push?: Pixel;
-    loaded?: boolean;
-    version?: string;
-};
-declare global {
-    interface Window { fbq?: Pixel; _fbq?: Pixel; }
+type Pixel = ((...args: unknown[]) => void) & { queue: unknown[][]; callMethod?: (...args: unknown[]) => void; push?: Pixel; loaded?: boolean; version?: string };
+declare global { interface Window { fbq?: Pixel; _fbq?: Pixel } }
+let tracker: ReturnType<typeof createReleaseTracker> | undefined;
+function getTracker() {
+    if (!tracker) {
+        let storage: Storage | undefined;
+        try { storage = window.sessionStorage; } catch { /* Use memory when storage is blocked. */ }
+        tracker = createReleaseTracker(storage);
+    }
+    return tracker;
 }
-
+function send(event: ReleaseEvent | null, metaEnabled: boolean) {
+    if (!event) return;
+    dispatchReleaseEvent(event, track, metaEnabled ? (name, data, options) => window.fbq?.("trackCustom", name, data, options) : undefined);
+}
 export default function MetaTracking() {
     const pathname = usePathname();
-    const [fromAd, setFromAd] = useState(false);
-    const lastTrackedPath = useRef<string | null>(null);
-    const enabled = Boolean(pixelId && /^\d+$/.test(pixelId));
-    const releasePage = pathname === "/mothers-daughter" || pathname === "/grace";
-
+    const query = useSearchParams().toString();
+    const lastPageView = useRef<string | null>(null);
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const source = params.get("utm_source")?.toLowerCase();
-        const medium = params.get("utm_medium")?.toLowerCase();
-        const adVisit = params.has("fbclid") || (
-            ["meta", "facebook", "instagram", "fb", "ig"].includes(source || "") &&
-            ["paid_social", "paid", "cpc", "ppc"].includes(medium || "")
-        );
-        setFromAd(adVisit);
-        // Meta's SDK persists across client navigation. Unload it with a full
-        // navigation when leaving an eligible ad landing page.
-        if ((!releasePage || !adVisit) && window.fbq) {
+        const search = query ? `?${query}` : "";
+        const pageViewKey = `${pathname}?${query}`;
+        const releasePage = Boolean(releaseFor(pathname));
+        const metaEnabled = Boolean(pixelId && /^\d+$/.test(pixelId) && releasePage && isMetaAd(search));
+        if (!metaEnabled && window.fbq) {
             window.fbq("consent", "revoke");
             window.location.reload();
+            return;
         }
-    }, [pathname, releasePage]);
-
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const currentAdVisit = params.has("fbclid") || (
-            ["meta", "facebook", "instagram", "fb", "ig"].includes(params.get("utm_source")?.toLowerCase() || "") &&
-            ["paid_social", "paid", "cpc", "ppc"].includes(params.get("utm_medium")?.toLowerCase() || "")
-        );
-        if (!enabled || !releasePage || !fromAd || !currentAdVisit || !pixelId) return;
-        if (!window.fbq) {
+        if (!releasePage) return;
+        if (metaEnabled && !window.fbq) {
             const fbq = function (...args: unknown[]) {
                 if (fbq.callMethod) fbq.callMethod(...args);
                 else fbq.queue.push(args);
@@ -65,33 +54,20 @@ export default function MetaTracking() {
             script.src = "https://connect.facebook.net/en_US/fbevents.js";
             document.head.appendChild(script);
         }
-        if (lastTrackedPath.current !== pathname) {
-            window.fbq("track", "PageView");
-            lastTrackedPath.current = pathname;
+        if (metaEnabled && lastPageView.current !== pageViewKey) {
+            window.fbq?.("track", "PageView");
+            lastPageView.current = pageViewKey;
         }
-
+        send(getTracker().landing(pathname, search), metaEnabled);
         const handleClick = (event: MouseEvent) => {
-            const anchor = event.target instanceof Element ? event.target.closest("a") : null;
-            if (!anchor) return;
-            const url = new URL(anchor.href);
-            const platforms: Record<string, string> = {
-                "open.spotify.com": "Spotify", "music.apple.com": "Apple Music",
-                "link.deezer.com": "Deezer", "www.deezer.com": "Deezer",
-                "youtu.be": "YouTube", "www.youtube.com": "YouTube",
-                "itunes.apple.com": "iTunes",
-            };
-            const platform = platforms[url.hostname];
-            if (!platform) return;
-            // Artist/social links aren't release-streaming conversions.
-            if (url.pathname.includes("/artist/") || url.pathname.includes("/@")) return;
-            const release = pathname === "/mothers-daughter" ? "Mother's Daughter"
-                : pathname === "/grace" ? "Grace" : null;
-            if (!release) return;
-            window.fbq?.("trackCustom", "StreamingLinkClick", { release, platform, page: pathname });
+            const anchor = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[data-music-platform]") : null;
+            const platform = anchor?.dataset.musicPlatform;
+            if (!anchor || !platform) return;
+            send(getTracker().landing(pathname, window.location.search), metaEnabled);
+            send(getTracker().click(pathname, window.location.search, platform, anchor.dataset.musicKind === "channel"), metaEnabled);
         };
         document.addEventListener("click", handleClick);
         return () => document.removeEventListener("click", handleClick);
-    }, [enabled, pathname, releasePage, fromAd]);
-
+    }, [pathname, query]);
     return null;
 }

@@ -20,19 +20,6 @@ export default function GraceHyperfollowPage() {
         }
     };
 
-    const handlePlatformClick = (platformName: string, platformUrl: string) => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const utmSource = urlParams.get("utm_source") || "direct";
-
-        track("Hyperfollow Conversion", {
-            release: "Grace",
-            platform: platformName,
-            destination: platformUrl,
-            source: utmSource,
-            page: "/grace",
-        });
-    };
-
     const streamingPlatforms = [
         {
             name: "Spotify",
@@ -67,7 +54,7 @@ export default function GraceHyperfollowPage() {
         {
             name: "YouTube Music",
             action: "Watch",
-            url: "https://www.youtube.com/@Limestone_music",
+            url: "https://music.youtube.com/playlist?list=OLAK5uy_nkOYbKsOoVH-n_dGcjw2MobI36LVHYWbs",
             icon: <Youtube className="w-6 h-6 text-[#FF0000]" />,
         },
     ];
@@ -163,7 +150,8 @@ export default function GraceHyperfollowPage() {
                             href={platform.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            onClick={() => handlePlatformClick(platform.name, platform.url)}
+                            data-music-platform={platform.name}
+                            data-music-kind={platform.url.includes("/@") ? "channel" : "streaming"}
                             className="flex items-center justify-between p-3 md:p-4 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 border border-white/10 hover:border-white/30 transition-all duration-300 group backdrop-blur-md shadow-lg"
                         >
                             <div className="flex items-center gap-4">

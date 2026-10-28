@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -41,8 +42,8 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         {children}
-        <MetaTracking />
         <Analytics />
+        <Suspense fallback={null}><MetaTracking /></Suspense>
         <SpeedInsights />
       </body>
     </html>

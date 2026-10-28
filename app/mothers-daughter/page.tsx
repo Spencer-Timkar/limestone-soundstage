@@ -20,19 +20,6 @@ export default function MothersDaughterHyperfollowPage() {
         }
     };
 
-    const handlePlatformClick = (platformName: string, platformUrl: string) => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const utmSource = urlParams.get("utm_source") || "direct";
-
-        track("Hyperfollow Conversion", {
-            release: "Mother’s Daughter",
-            platform: platformName,
-            destination: platformUrl,
-            source: utmSource,
-            page: "/mothers-daughter",
-        });
-    };
-
     const streamingPlatforms = [
         {
             name: "Spotify",
@@ -174,7 +161,8 @@ export default function MothersDaughterHyperfollowPage() {
                             href={platform.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            onClick={() => handlePlatformClick(platform.name, platform.url)}
+                            data-music-platform={platform.name}
+                            data-music-kind={platform.url.includes("/@") ? "channel" : "streaming"}
                             className="flex items-center justify-between p-3 md:p-4 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 border border-white/10 hover:border-white/30 transition-all duration-300 group backdrop-blur-md shadow-lg"
                         >
                             <div className="flex items-center gap-4">
