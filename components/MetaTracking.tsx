@@ -20,6 +20,12 @@ function send(event: ReleaseEvent | null, metaEnabled: boolean) {
     if (!event) return;
     dispatchReleaseEvent(event, track, metaEnabled ? (name, data, options) => window.fbq?.("trackCustom", name, data, options) : undefined);
 }
+export function trackStreamingClick(page: string, platform: string, channel = false) {
+    const search = window.location.search;
+    const metaEnabled = Boolean(pixelId && /^\d+$/.test(pixelId) && releaseFor(page) && isMetaAd(search));
+    send(getTracker().landing(page, search), metaEnabled);
+    send(getTracker().click(page, search, platform, channel), metaEnabled);
+}
 export default function MetaTracking() {
     const pathname = usePathname();
     const query = useSearchParams().toString();
@@ -59,15 +65,6 @@ export default function MetaTracking() {
             lastPageView.current = pageViewKey;
         }
         send(getTracker().landing(pathname, search), metaEnabled);
-        const handleClick = (event: MouseEvent) => {
-            const anchor = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[data-music-platform]") : null;
-            const platform = anchor?.dataset.musicPlatform;
-            if (!anchor || !platform) return;
-            send(getTracker().landing(pathname, window.location.search), metaEnabled);
-            send(getTracker().click(pathname, window.location.search, platform, anchor.dataset.musicKind === "channel"), metaEnabled);
-        };
-        document.addEventListener("click", handleClick);
-        return () => document.removeEventListener("click", handleClick);
     }, [pathname, query]);
     return null;
 }

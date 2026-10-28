@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, ExternalLink, Share2, Check, Instagram, Youtube, Music, Radio } from "lucide-react";
 import { track } from "@vercel/analytics";
 import EmailSignup from "@/components/EmailSignup";
+import { trackStreamingClick } from "@/components/MetaTracking";
 
 export default function MothersDaughterHyperfollowPage() {
     const [copied, setCopied] = useState(false);
@@ -161,6 +162,7 @@ export default function MothersDaughterHyperfollowPage() {
                             href={platform.url}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() => trackStreamingClick("/mothers-daughter", platform.name, platform.url.includes("/@"))}
                             data-music-platform={platform.name}
                             data-music-kind={platform.url.includes("/@") ? "channel" : "streaming"}
                             className="flex items-center justify-between p-3 md:p-4 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 border border-white/10 hover:border-white/30 transition-all duration-300 group backdrop-blur-md shadow-lg"
