@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+import MotionPreferences from "@/components/MotionPreferences";
 import MetaTracking from "@/components/MetaTracking";
 
 const geistSans = Geist({
@@ -17,6 +18,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.limestone.band"),
+  openGraph: {
+    title: "Limestone — The Official Site",
+    description: "Music, shows, and photos from Limestone, an alternative rock band from Lawrence, Kansas.",
+    images: [{ url: "/images/hero_high_res.webp", alt: "Limestone performing live" }],
+    type: "website",
+  },
+  twitter: { card: "summary_large_image" },
   title: {
     default: "Limestone — The Official Site",
     template: "%s | Limestone",
@@ -41,7 +50,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        {children}
+        <MotionPreferences>{children}</MotionPreferences>
         <Analytics />
         <Suspense fallback={null}><MetaTracking /></Suspense>
         <SpeedInsights />

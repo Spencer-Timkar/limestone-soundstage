@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { Menu, X, Instagram, Youtube, ArrowRight } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Menu, X, Instagram, Youtube } from "lucide-react";
 
 // ... (inside component)
 
@@ -16,11 +16,29 @@ import Image from "next/image";
 export default function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const menuDialog = useRef<HTMLDialogElement>(null);
+
+    useEffect(() => {
+        const dialog = menuDialog.current;
+        if (!isOpen || !dialog) return;
+        const previousOverflow = document.body.style.overflow;
+        dialog.showModal();
+        document.body.style.overflow = "hidden";
+        const desktop = window.matchMedia("(min-width: 1024px)");
+        const closeOnDesktop = () => { if (desktop.matches) dialog.close(); };
+        desktop.addEventListener("change", closeOnDesktop);
+        return () => {
+            desktop.removeEventListener("change", closeOnDesktop);
+            dialog.close();
+            document.body.style.overflow = previousOverflow;
+        };
+    }, [isOpen]);
 
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
         };
+        handleScroll();
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
@@ -107,8 +125,8 @@ export default function Navigation() {
 
                     ${scrolled ? "translate-y-0" : "-translate-y-14"}
                 `}>
-                    <a href="https://www.instagram.com/limestone.music/" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors transform hover:scale-110"><Instagram size={24} /></a>
-                    <a href="https://www.tiktok.com/@limestone.music" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors transform hover:scale-110">
+                    <a aria-label="Instagram" href="https://www.instagram.com/limestone.music/" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors transform hover:scale-110"><Instagram size={24} /></a>
+                    <a aria-label="TikTok" href="https://www.tiktok.com/@limestone.music" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors transform hover:scale-110">
                         <svg
                             viewBox="0 0 24 24"
                             fill="none"
@@ -121,7 +139,7 @@ export default function Navigation() {
                             <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
                         </svg>
                     </a>
-                    <a href="https://www.youtube.com/@Limestone_music" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors transform hover:scale-110"><Youtube size={24} /></a>
+                    <a aria-label="YouTube" href="https://www.youtube.com/@Limestone_music" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors transform hover:scale-110"><Youtube size={24} /></a>
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -130,6 +148,8 @@ export default function Navigation() {
                         className="text-white p-2"
                         onClick={() => setIsOpen(!isOpen)}
                         aria-label="Toggle menu"
+                        aria-expanded={isOpen}
+                        aria-controls="mobile-navigation"
                     >
                         {isOpen ? <X size={28} /> : <Menu size={28} />}
                     </button>
@@ -137,8 +157,30 @@ export default function Navigation() {
             </div>
 
             {/* Mobile Menu Overlay */}
-            {isOpen && (
-                <div className="lg:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-white/10 p-8 flex flex-col gap-8 text-center h-[calc(100vh-80px)]">
+            <dialog
+                ref={menuDialog}
+                id="mobile-navigation"
+                aria-label="Navigation menu"
+                onClose={() => setIsOpen(false)}
+                onKeyDown={(event) => {
+                    if (event.key !== "Tab") return;
+                    const controls = event.currentTarget.querySelectorAll<HTMLElement>("a[href], button:not([disabled])");
+                    const first = controls[0];
+                    const last = controls[controls.length - 1];
+                    if (event.shiftKey && document.activeElement === first) {
+                        event.preventDefault();
+                        last?.focus();
+                    } else if (!event.shiftKey && document.activeElement === last) {
+                        event.preventDefault();
+                        first?.focus();
+                    }
+                }}
+                className="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none bg-black/95 text-white backdrop:bg-black/80 p-8 overflow-y-auto"
+            >
+                <button type="button" onClick={() => menuDialog.current?.close()} className="ml-auto mb-8 flex p-3" aria-label="Close menu">
+                    <X size={28} />
+                </button>
+                <div className="flex flex-col gap-8 text-center">
                     <div className="flex flex-col gap-6">
                         {navLinks.map((link) => (
                             <Link
@@ -155,8 +197,8 @@ export default function Navigation() {
                     </div>
                     <div className="w-12 h-px bg-white/20 mx-auto" />
                     <div className="flex justify-center gap-10">
-                        <a href="https://www.instagram.com/limestone.music/" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white"><Instagram size={28} /></a>
-                        <a href="https://www.tiktok.com/@limestone.music" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white">
+                        <a aria-label="Instagram" href="https://www.instagram.com/limestone.music/" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white"><Instagram size={28} /></a>
+                        <a aria-label="TikTok" href="https://www.tiktok.com/@limestone.music" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white">
                             <svg
                                 viewBox="0 0 24 24"
                                 fill="none"
@@ -169,10 +211,10 @@ export default function Navigation() {
                                 <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
                             </svg>
                         </a>
-                        <a href="https://www.youtube.com/@Limestone_music" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white"><Youtube size={28} /></a>
+                        <a aria-label="YouTube" href="https://www.youtube.com/@Limestone_music" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white"><Youtube size={28} /></a>
                     </div>
                 </div>
-            )}
+            </dialog>
         </nav>
     );
 }

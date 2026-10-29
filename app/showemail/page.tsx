@@ -84,7 +84,7 @@ export default function ShowEmailPage() {
                         required
                         autoFocus
                         disabled={status === "submitting"}
-                        className="min-w-0 rounded-full border border-white/25 bg-zinc-950 px-8 py-5 text-xl text-white outline-none transition placeholder:text-zinc-600 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
+                        className="min-w-0 rounded-full border border-white/25 bg-zinc-950 px-8 py-5 text-xl text-white outline-none transition placeholder:text-zinc-400 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
                     />
 
                     <label htmlFor="show-last-name" className="sr-only">Last name</label>
@@ -101,7 +101,7 @@ export default function ShowEmailPage() {
                         placeholder="Last name"
                         required
                         disabled={status === "submitting"}
-                        className="min-w-0 rounded-full border border-white/25 bg-zinc-950 px-8 py-5 text-xl text-white outline-none transition placeholder:text-zinc-600 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
+                        className="min-w-0 rounded-full border border-white/25 bg-zinc-950 px-8 py-5 text-xl text-white outline-none transition placeholder:text-zinc-400 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
                     />
                 </div>
 
@@ -122,7 +122,7 @@ export default function ShowEmailPage() {
                         placeholder="Email address"
                         required
                         disabled={status === "submitting"}
-                        className="min-w-0 flex-1 rounded-full border border-white/25 bg-zinc-950 px-8 py-5 text-xl text-white outline-none transition placeholder:text-zinc-600 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
+                        className="min-w-0 flex-1 rounded-full border border-white/25 bg-zinc-950 px-8 py-5 text-xl text-white outline-none transition placeholder:text-zinc-400 focus:border-white focus:ring-2 focus:ring-white/15 disabled:opacity-60"
                     />
                     <button
                         type="submit"

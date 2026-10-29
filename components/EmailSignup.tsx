@@ -83,7 +83,7 @@ export default function EmailSignup({ page }: EmailSignupProps) {
                                 placeholder="Email address"
                                 required
                                 disabled={status === "submitting"}
-                                className="min-w-0 flex-1 rounded-full border border-white/20 bg-black/70 px-5 py-3.5 text-base text-white outline-none transition placeholder:text-zinc-600 focus:border-white/60 focus:ring-2 focus:ring-white/10 disabled:opacity-60"
+                                className="min-w-0 flex-1 rounded-full border border-white/20 bg-black/70 px-5 py-3.5 text-base text-white outline-none transition placeholder:text-zinc-400 focus:border-white/60 focus:ring-2 focus:ring-white/10 disabled:opacity-60"
                             />
                             <button
                                 type="submit"
@@ -99,9 +99,9 @@ export default function EmailSignup({ page }: EmailSignupProps) {
                             <input id={`website-${page}`} type="text" name="website" tabIndex={-1} autoComplete="off" />
                         </div>
 
-                        <p className="mt-3 text-xs leading-relaxed text-zinc-600">
+                        <p className="mt-3 text-xs leading-relaxed text-zinc-400">
                             By joining, you agree to receive emails from Limestone. Unsubscribe anytime. See our{" "}
-                            <Link href="/privacy" className="underline decoration-zinc-700 underline-offset-2 hover:text-zinc-400">
+                            <Link href="/privacy" className="underline decoration-zinc-400 underline-offset-2 hover:text-zinc-400">
                                 privacy information
                             </Link>.
                         </p>

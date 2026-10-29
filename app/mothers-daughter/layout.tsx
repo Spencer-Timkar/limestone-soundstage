@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Mother's Daughter",
+    alternates: { canonical: "/mothers-daughter" },
     description: "Listen to Mother's Daughter by Limestone on Spotify, Apple Music, Deezer, and YouTube.",
     openGraph: {
         title: "Mother's Daughter | Limestone",

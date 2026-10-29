@@ -13,6 +13,7 @@ const ContactSection = dynamic(() => import("@/components/ContactSection"));
 const StarBackground = dynamic(() => import("@/components/StarBackground"));
 
 
+export const metadata = { alternates: { canonical: "/" } };
 export const revalidate = 60;
 
 export default async function Home() {

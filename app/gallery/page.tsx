@@ -5,19 +5,8 @@ import { ArrowLeft, Instagram, Youtube } from "lucide-react";
 import Footer from "@/components/Footer";
 import StarBackground from "@/components/StarBackground";
 import FanGallerySection from "@/components/FanGallerySection";
-import { useState, useEffect } from "react";
 
 export default function GalleryPage() {
-    const [scrolled, setScrolled] = useState(false);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
     return (
         <main className="relative bg-black min-h-screen">
             {/* Custom Header */}
@@ -25,7 +14,7 @@ export default function GalleryPage() {
                 <div className="w-full flex justify-between items-start">
                     {/* Left: Back Button */}
                     <div className="pointer-events-auto z-50">
-                        <Link href="/" className="text-white hover:text-zinc-300 transition-colors flex items-center gap-2 group">
+                        <Link href="/" aria-label="Back to homepage" className="text-white hover:text-zinc-300 transition-colors flex items-center gap-2 group">
                             <ArrowLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
                             <span className="uppercase tracking-widest font-bold hidden sm:block">Back</span>
                         </Link>
@@ -33,10 +22,10 @@ export default function GalleryPage() {
 
                     {/* Right: Social Icons */}
                     <div className="flex gap-4 pointer-events-auto z-50">
-                        <a href="https://www.instagram.com/limestone.music/" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors transform hover:scale-110">
+                        <a aria-label="Instagram" href="https://www.instagram.com/limestone.music/" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors transform hover:scale-110">
                             <Instagram size={24} />
                         </a>
-                        <a href="https://www.tiktok.com/@limestone.music" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors transform hover:scale-110">
+                        <a aria-label="TikTok" href="https://www.tiktok.com/@limestone.music" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors transform hover:scale-110">
                             <svg
                                 viewBox="0 0 24 24"
                                 fill="none"
@@ -49,7 +38,7 @@ export default function GalleryPage() {
                                 <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
                             </svg>
                         </a>
-                        <a href="https://www.youtube.com/@Limestone_music" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors transform hover:scale-110">
+                        <a aria-label="YouTube" href="https://www.youtube.com/@Limestone_music" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors transform hover:scale-110">
                             <Youtube size={24} />
                         </a>
                     </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 
 export default function HeroSection() {
@@ -21,7 +20,7 @@ export default function HeroSection() {
 
             {/* Content */}
             {/* Content removed as requested */}
-            <div className="relative z-10" />
+            <h1 className="sr-only">Limestone — Alternative rock from Lawrence, Kansas</h1>
 
         </section>
 

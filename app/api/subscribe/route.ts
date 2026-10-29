@@ -27,6 +27,10 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: "Please enter a valid email address." }, { status: 400 });
     }
 
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+        return NextResponse.json({ message: "Please enter a valid email address." }, { status: 400 });
+    }
+
     // Silently accept honeypot submissions so bots do not learn how they were detected.
     if (typeof body.website === "string" && body.website.trim()) {
         return NextResponse.json({ message: "You're on the list." });

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const metadata = { title: "Privacy" };
+export const metadata = { title: "Privacy", alternates: { canonical: "/privacy" } };
 
 export default function PrivacyPage() {
     return <main className="min-h-screen bg-black text-white px-6 py-20">

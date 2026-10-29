@@ -23,16 +23,16 @@ export default function ContactSection() {
 
                     <a
                         href="mailto:official.limestone.band@gmail.com"
-                        className="text-2xl md:text-3xl font-bold hover:text-zinc-300 transition-colors"
+                        className="max-w-full break-words [overflow-wrap:anywhere] text-xl sm:text-2xl md:text-3xl font-bold hover:text-zinc-300 transition-colors"
                     >
-                        official.limestone.band@gmail.com
+                        official.limestone.band<wbr />@gmail.com
                     </a>
 
                     <div className="flex gap-8 mt-8">
-                        <a href="https://www.instagram.com/limestone.music/" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors transform hover:scale-110">
+                        <a aria-label="Instagram" href="https://www.instagram.com/limestone.music/" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors transform hover:scale-110">
                             <Instagram size={32} />
                         </a>
-                        <a href="https://www.tiktok.com/@limestone.music" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors transform hover:scale-110">
+                        <a aria-label="TikTok" href="https://www.tiktok.com/@limestone.music" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors transform hover:scale-110">
                             <svg
                                 viewBox="0 0 24 24"
                                 fill="none"
@@ -45,7 +45,7 @@ export default function ContactSection() {
                                 <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
                             </svg>
                         </a>
-                        <a href="https://www.youtube.com/@Limestone_music" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors transform hover:scale-110">
+                        <a aria-label="YouTube" href="https://www.youtube.com/@Limestone_music" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors transform hover:scale-110">
                             <Youtube size={32} />
                         </a>
                     </div>
